@@ -1,0 +1,55 @@
+<section class="usuarios">
+  <h2>Usuarios</h2>
+
+  @if (mensaje()) {
+    <p class="aviso">{{ mensaje() }}</p>
+  }
+
+  @if (error()) {
+    <p class="error">
+      {{ error() }}
+      <button class="reintentar" (click)="cargar()">Reintentar</button>
+    </p>
+  }
+
+  @if (cargando()) {
+    <p class="cargando">Cargando usuarios...</p>
+  } @else if (usuarios().length > 0) {
+    <div class="tabla-contenedor">
+      <table>
+        <thead>
+          <tr>
+            <th>Correo</th>
+            <th>Rol</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (u of usuarios(); track u.idUsuario) {
+            <tr>
+              <td>{{ u.correo }}</td>
+              <td><span class="rol" [attr.data-rol]="u.rol">{{ u.rol }}</span></td>
+              <td>
+                <span class="estado" [attr.data-activo]="u.activo">
+                  {{ u.activo ? 'Activa' : 'Desactivada' }}
+                </span>
+              </td>
+              <td>
+                <button
+                  class="toggle"
+                  [attr.data-activo]="u.activo"
+                  [disabled]="u.correo === miCorreo()"
+                  [title]="u.correo === miCorreo() ? 'No puedes desactivar tu propia cuenta' : ''"
+                  (click)="cambiarEstado(u)"
+                >
+                  {{ u.activo ? 'Desactivar' : 'Activar' }}
+                </button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</section>

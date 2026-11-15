@@ -1,0 +1,69 @@
+<section class="detalle">
+  <a routerLink="/citas" class="volver">&larr; Volver a las citas</a>
+
+  @if (cargando()) {
+    <p class="cargando">Cargando cita...</p>
+  }
+
+  @if (error()) {
+    <p class="error">{{ error() }}</p>
+  }
+
+  @if (mensaje()) {
+    <p class="aviso">{{ mensaje() }}</p>
+  }
+
+  @if (cita(); as c) {
+    <h2>Cita {{ c.codigo }}</h2>
+
+    <dl>
+      <dt>Estado</dt>
+      <dd><span class="estado" [attr.data-estado]="c.estado">{{ c.estado }}</span></dd>
+
+      <dt>Doctor</dt>
+      <dd>Dr. {{ c.doctor.nombres }} {{ c.doctor.apellidos }} (CMP {{ c.doctor.colegiatura }})</dd>
+
+      <dt>Paciente</dt>
+      <dd>{{ c.paciente.nombres }} {{ c.paciente.apellidos }} (DNI {{ c.paciente.dni }})</dd>
+
+      <dt>Especialidad</dt>
+      <dd>{{ c.doctor.especialidad.nombre }}</dd>
+
+      <dt>Fecha y hora</dt>
+      <dd>{{ c.fecha }} · {{ c.hora }} a {{ c.horaFin }} ({{ c.duracionMinutos }} min)</dd>
+
+      <dt>Motivo</dt>
+      <dd>{{ c.motivo }}</dd>
+
+      @if (c.observacion) {
+        <dt>Observacion</dt>
+        <dd>{{ c.observacion }}</dd>
+      }
+
+      <dt>Precio</dt>
+      <dd>S/ {{ c.doctor.especialidad.precio }}</dd>
+    </dl>
+
+    @if (acciones().length > 0) {
+      <div class="gestion">
+        <label for="observacion">Observacion (opcional)</label>
+        <textarea id="observacion" rows="2" [formControl]="observacion"
+          placeholder="Ej: Presion normal, volver en 3 meses"></textarea>
+        @if (observacion.touched && observacion.invalid) {
+          <small class="error-campo">La observacion no puede pasar de 300 caracteres.</small>
+        }
+        <div class="botones">
+          @for (estado of acciones(); track estado) {
+            <button class="btn-accion" [attr.data-estado]="estado" (click)="cambiarEstado(estado)">
+              {{ etiqueta(estado) }}
+            </button>
+          }
+        </div>
+      </div>
+    }
+
+    @if (puedeCancelar()) {
+      <button class="btn-cancelar" (click)="cancelar()">Cancelar cita</button>
+    }
+  }
+</section>

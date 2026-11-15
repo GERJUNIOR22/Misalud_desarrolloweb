@@ -1,0 +1,89 @@
+@use '../../../styles/variables' as *;
+@use '../../../styles/mixins' as *;
+
+// El login no usa el marco publico ni el del personal: es una tarjeta centrada en la pantalla
+.pagina {
+  display: grid;
+  place-items: center;
+  min-height: 100vh;
+  padding: $espaciado;
+}
+
+.login {
+  @include tarjeta($color-marino-claro);
+  width: 100%;
+  max-width: 380px;
+
+  .volver {
+    display: inline-block;
+    margin-bottom: $espaciado;
+    color: $color-principal;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+
+    &:hover { text-decoration: underline; }
+  }
+
+  h1 {
+    margin: 0;
+    font-size: 1.4rem;
+    color: $color-marino;
+  }
+
+  .subtitulo {
+    margin: 0.2rem 0 $espaciado;
+    color: $color-neutro;
+    font-size: 0.9rem;
+  }
+
+  form {
+    display: grid;
+    gap: 0.4rem;
+  }
+
+  label {
+    font-weight: 600;
+    margin-top: 0.4rem;
+  }
+
+  input {
+    padding: 0.6rem;
+    border: 1px solid $color-borde;
+    border-radius: $radio;
+    font-size: 1rem;
+
+    &.ng-touched.ng-invalid {
+      border-color: $color-peligro;
+    }
+  }
+
+  .error {
+    color: $color-peligro;
+  }
+
+  .mensaje {
+    margin: 0.6rem 0 0;
+    padding: 0.6rem;
+    border-radius: $radio;
+    background: #fbe9e7;
+    color: $color-peligro;
+  }
+
+  button {
+    @include boton-base;
+    margin-top: $espaciado;
+    background: $color-marino-claro;
+    color: #fff;
+
+    &:hover:not(:disabled) { background: $color-marino; }
+  }
+
+  .nota {
+    margin: $espaciado 0 0;
+    text-align: center;
+    color: $color-neutro;
+    font-size: 0.8rem;
+    line-height: 1.4;
+  }
+}

@@ -1,0 +1,20 @@
+// Estilos GLOBALES: reglas compartidas por toda la aplicacion
+// (los estilos de cada pieza concreta van en el .scss de su componente)
+@use 'styles/variables' as *;
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+  color: $color-texto;
+  background: $color-fondo;
+}
+
+h1,
+h2,
+h3 {
+  margin: 0;
+}

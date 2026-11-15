@@ -1,0 +1,38 @@
+<section class="card" [attr.data-estado]="cita().estado">
+  <header class="cabecera">
+    @if (mostrarPaciente()) {
+      <h3>Paciente: {{ cita().paciente.nombres }} {{ cita().paciente.apellidos }}</h3>
+    } @else {
+      <h3>Dr. {{ cita().doctor.nombres }} {{ cita().doctor.apellidos }}</h3>
+    }
+    <span class="estado" [attr.data-estado]="cita().estado">{{ cita().estado }}</span>
+  </header>
+
+  <p class="especialidad">{{ cita().doctor.especialidad.nombre }}</p>
+  <p class="motivo">{{ cita().motivo }}</p>
+
+  <div class="detalle">
+    <span>{{ cita().fecha }}</span>
+    <span>{{ cita().hora }} - {{ cita().horaFin }}</span>
+    <strong>S/ {{ cita().doctor.especialidad.precio }}</strong>
+  </div>
+
+  <footer class="acciones">
+    <small>{{ cita().codigo }}</small>
+    <div class="botones">
+      <button class="btn-detalle" (click)="verDetalle()">Ver detalle</button>
+
+      @for (estado of acciones(); track estado) {
+        <button class="btn-accion" [attr.data-estado]="estado" (click)="alCambiarEstado(estado)">
+          {{ etiqueta(estado) }}
+        </button>
+      }
+
+      @if (!mostrarPaciente()) {
+        <button class="btn-cancelar" [disabled]="!puedeCancelar()" (click)="alCancelar()">
+          Cancelar cita
+        </button>
+      }
+    </div>
+  </footer>
+</section>

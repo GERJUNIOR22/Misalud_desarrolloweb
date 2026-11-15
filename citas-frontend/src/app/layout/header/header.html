@@ -1,0 +1,25 @@
+<header class="barra">
+  <h1>{{ nombreSistema }}</h1>
+
+  <nav>
+    <a routerLink="/inicio" routerLinkActive="activo">Inicio</a>
+    <a routerLink="/citas" routerLinkActive="activo" [routerLinkActiveOptions]="{ exact: true }">
+      {{ auth.rol() === 'ADMIN' ? 'Citas' : 'Mis citas' }}
+    </a>
+    <a routerLink="/citas/nueva" routerLinkActive="activo">Reservar cita</a>
+    <a routerLink="/horarios" routerLinkActive="activo">
+      {{ auth.rol() === 'ADMIN' ? 'Horarios' : 'Mis horarios' }}
+    </a>
+    @if (auth.rol() === 'ADMIN') {
+      <a routerLink="/pagos" routerLinkActive="activo">Caja</a>
+      <a routerLink="/admin/usuarios" routerLinkActive="activo">Usuarios</a>
+      <a routerLink="/admin/especialidades" routerLinkActive="activo">Especialidades</a>
+      <a routerLink="/admin/doctores" routerLinkActive="activo">Doctores</a>
+      <a routerLink="/admin/pacientes" routerLinkActive="activo">Pacientes</a>
+    }
+    @if (auth.sesion(); as sesion) {
+      <span class="usuario">{{ sesion.correo }} ({{ sesion.rol }})</span>
+      <button class="salir" (click)="salir()">Salir</button>
+    }
+  </nav>
+</header>

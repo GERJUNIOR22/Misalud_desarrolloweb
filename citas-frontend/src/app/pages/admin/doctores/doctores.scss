@@ -1,0 +1,91 @@
+@use '../../../../styles/variables' as *;
+@use '../../../../styles/mixins' as *;
+
+.doctores {
+  display: grid;
+  gap: $espaciado;
+
+  h2 { color: $color-principal-oscuro; }
+  p { margin: 0; }
+
+  @include tabla-datos;
+
+  .formulario {
+    @include tarjeta($color-principal);
+    display: grid;
+    gap: 0.6rem;
+
+    h3 { color: $color-principal-oscuro; }
+  }
+
+  .fila {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 0.6rem;
+  }
+
+  .campo {
+    display: grid;
+    gap: 0.25rem;
+    align-content: start;
+  }
+
+  label { font-weight: 600; }
+
+  input,
+  select {
+    padding: 0.6rem;
+    border: 1px solid $color-borde;
+    border-radius: $radio;
+    font-size: 1rem;
+
+    &.ng-touched.ng-invalid { border-color: $color-peligro; }
+    &:disabled { background: $color-fondo; color: $color-neutro; }
+  }
+
+  .error-campo {
+    min-height: 1.1rem;
+    color: $color-peligro;
+  }
+
+  .botones {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .guardar {
+    @include boton-base;
+    background: $color-principal;
+    color: #fff;
+  }
+
+  .secundario {
+    @include boton-base;
+    background: #fff;
+    color: $color-neutro;
+    border: 1px solid $color-borde;
+  }
+
+  .aviso {
+    padding: 0.6rem $espaciado;
+    border-radius: $radio;
+    background: #e6f4ec;
+    color: $color-exito;
+  }
+
+  .error {
+    padding: 0.6rem $espaciado;
+    border-radius: $radio;
+    background: #fbe9e7;
+    color: $color-peligro;
+  }
+
+  .cargando { color: $color-neutro; }
+
+  .editar {
+    @include boton-base;
+    padding: 0.3rem 0.8rem;
+    background: $color-principal;
+    color: #fff;
+  }
+}

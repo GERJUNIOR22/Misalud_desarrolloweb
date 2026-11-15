@@ -1,0 +1,128 @@
+@use '../../../styles/variables' as *;
+@use '../../../styles/mixins' as *;
+
+.mi-cita {
+  max-width: 520px;
+  margin: 0 auto;
+
+  h1 { margin: 0; color: $color-marino; }
+  p { margin: 0; }
+
+  .resultado,
+  .consulta {
+    @include tarjeta($color-marino-claro);
+    display: grid;
+    gap: 0.8rem;
+  }
+
+  .resultado {
+    text-align: center;
+    justify-items: center;
+  }
+
+  .exito {
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: #e6f4ec;
+    color: $color-exito;
+    font-size: 1.6rem;
+  }
+
+  .aviso { color: $color-neutro; font-size: 0.9rem; }
+
+  .codigo {
+    padding: 0.3rem 1.2rem;
+    border-radius: 10px;
+    background: #e8f1fa;
+    color: $color-principal-oscuro;
+    font-size: 1.6rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+  }
+
+  dl {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: 0.4rem 1rem;
+    margin: 0;
+    width: 100%;
+    text-align: left;
+    font-size: 0.95rem;
+
+    dt { color: $color-neutro; }
+    dd { margin: 0; }
+  }
+
+  .estado {
+    @include etiqueta($color-aviso);
+
+    &[data-estado='CONFIRMADA'],
+    &[data-estado='COMPLETADA'],
+    &[data-estado='COMPLETADO'] { background: $color-exito; }
+    &[data-estado='RECHAZADA'],
+    &[data-estado='CANCELADA'],
+    &[data-estado='RECHAZADO'] { background: $color-peligro; }
+  }
+
+  .acciones {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.6rem;
+    margin-top: 0.4rem;
+
+    a {
+      @include boton-base;
+      text-decoration: none;
+    }
+
+    .principal { background: $color-marino-claro; color: #fff; }
+    .secundario { background: $color-superficie; color: $color-texto; border: 1px solid $color-borde; }
+  }
+
+  // ---- formulario de consulta ----
+  .volver {
+    justify-self: start;
+    color: $color-principal;
+    text-decoration: none;
+    font-weight: 600;
+
+    &:hover { text-decoration: underline; }
+  }
+
+  .bajada { color: $color-neutro; }
+
+  form { display: grid; gap: 0.7rem; }
+
+  .campo { display: grid; gap: 0.25rem; }
+
+  label { font-weight: 600; font-size: 0.9rem; }
+
+  input {
+    padding: 0.6rem;
+    border: 1px solid $color-borde;
+    border-radius: $radio;
+    font-size: 1rem;
+
+    &.ng-touched.ng-invalid { border-color: $color-peligro; }
+  }
+
+  .error-campo { color: $color-peligro; font-size: 0.82rem; }
+  .cargando { color: $color-neutro; }
+
+  .error {
+    padding: 0.6rem;
+    border-radius: $radio;
+    background: #fbe9e7;
+    color: $color-peligro;
+  }
+
+  .consultar {
+    @include boton-base;
+    background: $color-marino-claro;
+    color: #fff;
+  }
+}

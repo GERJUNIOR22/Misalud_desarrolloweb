@@ -1,0 +1,112 @@
+<section class="pagos">
+  <h2>Caja: todos los pagos</h2>
+
+  @if (resumen(); as r) {
+    <div class="totales">
+      <div class="total cobrado">
+        <span>Cobrado</span>
+        <strong>S/ {{ r.cobrado | number: '1.2-2' }}</strong>
+      </div>
+      <div class="total por-cobrar">
+        <span>Por cobrar</span>
+        <strong>S/ {{ r.porCobrar | number: '1.2-2' }}</strong>
+      </div>
+    </div>
+  }
+
+  @if (mensaje()) {
+    <p class="aviso">{{ mensaje() }}</p>
+  }
+
+  @if (error()) {
+    <p class="error">
+      {{ error() }}
+      <button class="reintentar" (click)="cargar()">Reintentar</button>
+    </p>
+  }
+
+  <div class="sin-cobro">
+      <h3>Citas completadas sin cobro</h3>
+
+      @if (sinCobro().length === 0) {
+        <p class="vacio">No hay citas completadas pendientes de cobro.</p>
+      } @else {
+        <div class="cobros">
+          @for (c of sinCobro(); track c.codigo) {
+            <article class="cobro">
+              <div class="datos">
+                <strong>{{ c.codigo }}</strong>
+                <span>{{ c.paciente.nombres }} {{ c.paciente.apellidos }}</span>
+                <small>
+                  Dr. {{ c.doctor.nombres }} {{ c.doctor.apellidos }} · {{ c.doctor.especialidad.nombre }}
+                  · {{ c.fecha }}
+                </small>
+              </div>
+
+              <div class="monto">S/ {{ c.doctor.especialidad.precio | number: '1.2-2' }}</div>
+
+              <div class="cobrar-acciones">
+                <select #metodo aria-label="Metodo de cobro">
+                  @for (m of metodos; track m) {
+                    <option [value]="m" [selected]="m === 'EFECTIVO'">{{ m }}</option>
+                  }
+                </select>
+                <label class="confirmar-ahora" title="Si es efectivo, deja el pago como COMPLETADO">
+                  <input #confirmar type="checkbox" checked /> Confirmar
+                </label>
+                <button class="cobrar" (click)="cobrar(c, metodo.value, confirmar.checked)">
+                  Registrar cobro
+                </button>
+              </div>
+            </article>
+          }
+        </div>
+      }
+    </div>
+
+  <h3 class="subtitulo">Pagos registrados</h3>
+
+  @if (cargando()) {
+    <p class="cargando">Cargando pagos...</p>
+  } @else if (pagos().length === 0 && !error()) {
+    <p class="vacio">No hay pagos registrados.</p>
+  } @else if (pagos().length > 0) {
+    <div class="tabla-contenedor">
+      <table>
+        <thead>
+          <tr>
+            <th>Cita</th>
+            <th>Paciente</th>
+            <th>Monto</th>
+            <th>Metodo</th>
+            <th>Estado</th>
+            <th>Fecha</th>
+            <th>N.º operacion</th>
+            <th>Caja</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (p of pagos(); track p.idPago) {
+            <tr>
+              <td>{{ p.codigoCita }}</td>
+              <td>{{ p.paciente }}</td>
+              <td class="num">S/ {{ p.monto | number: '1.2-2' }}</td>
+              <td>{{ p.metodo }}</td>
+              <td><span class="estado" [attr.data-estado]="p.estado">{{ p.estado }}</span></td>
+              <td>{{ p.fechaPago | date: 'dd/MM/yyyy HH:mm' }}</td>
+              <td class="operacion">{{ p.numeroOperacion ?? '-' }}</td>
+              <td class="acciones">
+                @if (p.estado === 'PENDIENTE') {
+                  <button class="confirmar" (click)="cambiarEstado(p, 'COMPLETADO')">Confirmar</button>
+                  <button class="rechazar" (click)="cambiarEstado(p, 'RECHAZADO')">Rechazar</button>
+                } @else {
+                  <span class="sin-accion">-</span>
+                }
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</section>

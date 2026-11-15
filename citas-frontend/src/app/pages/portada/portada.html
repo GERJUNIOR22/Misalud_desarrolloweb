@@ -1,0 +1,42 @@
+<section class="portada">
+  <div class="mensaje">
+    <span class="etiqueta">Reserva en línea</span>
+    <h1>Reserva tu cita médica en un solo lugar.</h1>
+    <p class="bajada">
+      Elige tu especialidad, paga tu consulta y recibe tu código. No necesitas crear una cuenta.
+    </p>
+
+    <a routerLink="/reservar" class="reservar">Reservar cita &rarr;</a>
+
+    <form class="consulta" [formGroup]="formulario" (ngSubmit)="consultar()" novalidate>
+      <h2>¿Ya reservaste? Consulta tu cita</h2>
+      <div class="campos">
+        <div class="campo">
+          <input formControlName="codigo" placeholder="CIT-00007" aria-label="Código de la cita" />
+          @if (formulario.controls.codigo.touched && formulario.controls.codigo.invalid) {
+            <small class="error">Código con el formato CIT-00007.</small>
+          }
+        </div>
+        <div class="campo">
+          <input formControlName="dni" placeholder="DNI" maxlength="8" inputmode="numeric" aria-label="DNI" />
+          @if (formulario.controls.dni.touched && formulario.controls.dni.invalid) {
+            <small class="error">El DNI tiene 8 dígitos.</small>
+          }
+        </div>
+        <button type="submit" class="consultar">Consultar</button>
+      </div>
+      <small class="ayuda">El código aparece en la confirmación que recibiste al reservar.</small>
+    </form>
+  </div>
+
+  <aside class="como-funciona">
+    <span class="sobretitulo">Cómo funciona</span>
+    <h2>Tu cita, sin vueltas.</h2>
+    @for (paso of pasos; track paso.numero) {
+      <div class="paso">
+        <span class="numero">{{ paso.numero }}</span>
+        <strong>{{ paso.texto }}</strong>
+      </div>
+    }
+  </aside>
+</section>

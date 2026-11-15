@@ -1,0 +1,79 @@
+<section class="mi-cita">
+  @if (reserva(); as r) {
+    <div class="resultado">
+      @if (esNueva()) {
+        <div class="exito" aria-hidden="true">&#10003;</div>
+        <h1>Reserva confirmada</h1>
+        <p class="aviso">Guarda tu código y tu DNI para consultar tu cita.</p>
+      } @else {
+        <h1>Tu cita</h1>
+      }
+
+      <div class="codigo">{{ r.codigoCita }}</div>
+
+      <dl>
+        <dt>Paciente</dt>
+        <dd>{{ r.paciente }}</dd>
+        <dt>Doctor</dt>
+        <dd>{{ r.doctor }}@if (r.especialidad) { · {{ r.especialidad }} }</dd>
+        <dt>Fecha y hora</dt>
+        <dd>{{ r.fecha }} · {{ r.hora.slice(0, 5) }} a {{ r.horaFin.slice(0, 5) }}</dd>
+        <dt>Estado de la cita</dt>
+        <dd><span class="estado" [attr.data-estado]="r.estadoCita">{{ r.estadoCita }}</span></dd>
+        @if (r.estadoPago) {
+          <dt>Pago</dt>
+          <dd>
+            S/ {{ r.monto | number: '1.2-2' }} · {{ r.metodoPago }} ·
+            <span class="estado" [attr.data-estado]="r.estadoPago">{{ r.estadoPago }}</span>
+          </dd>
+          @if (r.numeroOperacion) {
+            <dt>N.º de operación</dt>
+            <dd>{{ r.numeroOperacion }}</dd>
+          }
+        } @else {
+          <dt>Pago</dt>
+          <dd>Pendiente de cobro en caja</dd>
+        }
+      </dl>
+
+      <div class="acciones">
+        <a routerLink="/" class="secundario">Ir al inicio</a>
+        <a routerLink="/reservar" class="principal">Reservar otra cita</a>
+      </div>
+    </div>
+  } @else {
+    <div class="consulta">
+      <a routerLink="/" class="volver">&larr; Volver al inicio</a>
+      <h1>Consulta tu cita</h1>
+      <p class="bajada">Ingresa el código de tu cita y tu DNI.</p>
+
+      <form [formGroup]="formulario" (ngSubmit)="consultar()" novalidate>
+        <div class="campo">
+          <label for="codigo">Código de la cita</label>
+          <input id="codigo" formControlName="codigo" placeholder="CIT-00007" />
+          @if (formulario.controls.codigo.touched && formulario.controls.codigo.invalid) {
+            <small class="error-campo">Escriba el código con el formato CIT-00007.</small>
+          }
+        </div>
+
+        <div class="campo">
+          <label for="dni">DNI</label>
+          <input id="dni" formControlName="dni" maxlength="8" inputmode="numeric" placeholder="8 dígitos" />
+          @if (formulario.controls.dni.touched && formulario.controls.dni.invalid) {
+            <small class="error-campo">El DNI debe tener 8 dígitos.</small>
+          }
+        </div>
+
+        @if (cargando()) {
+          <p class="cargando">Buscando tu cita...</p>
+        }
+
+        @if (error()) {
+          <p class="error">{{ error() }}</p>
+        }
+
+        <button type="submit" class="consultar" [disabled]="cargando()">Consultar</button>
+      </form>
+    </div>
+  }
+</section>

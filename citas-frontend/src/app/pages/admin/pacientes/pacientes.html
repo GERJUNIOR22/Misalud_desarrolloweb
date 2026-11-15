@@ -1,0 +1,50 @@
+<section class="pacientes">
+  <h2>Pacientes</h2>
+  <p class="nota">
+    Los pacientes no tienen cuenta: su ficha se crea cuando reservan en línea. Aquí se consultan por DNI.
+  </p>
+
+  <input
+    class="buscar"
+    type="search"
+    placeholder="Buscar por DNI o nombre..."
+    [value]="filtro()"
+    (input)="alEscribir($event)"
+  />
+
+  @if (error()) {
+    <p class="error">
+      {{ error() }}
+      <button class="reintentar" (click)="cargar()">Reintentar</button>
+    </p>
+  }
+
+  @if (cargando()) {
+    <p class="cargando">Cargando pacientes...</p>
+  } @else if (filtrados().length === 0 && !error()) {
+    <p class="vacio">No se encontraron pacientes.</p>
+  } @else if (filtrados().length > 0) {
+    <div class="tabla-contenedor">
+      <table>
+        <thead>
+          <tr>
+            <th>DNI</th>
+            <th>Paciente</th>
+            <th>Fecha de nacimiento</th>
+            <th>Telefono</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (p of filtrados(); track p.dni) {
+            <tr>
+              <td>{{ p.dni }}</td>
+              <td>{{ p.nombres }} {{ p.apellidos }}</td>
+              <td>{{ p.fechaNacimiento ?? '-' }}</td>
+              <td>{{ p.telefono ?? '-' }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</section>

@@ -1,0 +1,60 @@
+@use '../../../../styles/variables' as *;
+@use '../../../../styles/mixins' as *;
+
+.usuarios {
+  display: grid;
+  gap: $espaciado;
+
+  h2 { color: $color-principal-oscuro; }
+  p { margin: 0; }
+
+  @include tabla-datos;
+
+  .aviso {
+    padding: 0.6rem $espaciado;
+    border-radius: $radio;
+    background: #e6f4ec;
+    color: $color-exito;
+  }
+
+  .error {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: $espaciado;
+    padding: 0.6rem $espaciado;
+    border-radius: $radio;
+    background: #fbe9e7;
+    color: $color-peligro;
+  }
+
+  .reintentar {
+    @include boton-base;
+    background: $color-peligro;
+    color: #fff;
+  }
+
+  .cargando { color: $color-neutro; }
+
+  .rol {
+    @include etiqueta($color-principal);
+
+    &[data-rol='ADMIN'] { background: $color-principal-oscuro; }
+    &[data-rol='MEDICO'] { background: $color-exito; }
+  }
+
+  .estado {
+    @include etiqueta($color-exito);
+
+    &[data-activo='false'] { background: $color-peligro; }
+  }
+
+  .toggle {
+    @include boton-base;
+    padding: 0.3rem 0.8rem;
+    color: #fff;
+    background: $color-peligro;
+
+    &[data-activo='false'] { background: $color-exito; }
+  }
+}

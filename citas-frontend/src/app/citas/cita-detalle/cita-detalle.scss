@@ -1,0 +1,94 @@
+@use '../../../styles/variables' as *;
+@use '../../../styles/mixins' as *;
+
+.detalle {
+  @include tarjeta($color-principal);
+
+  .volver {
+    display: inline-block;
+    margin-bottom: $espaciado;
+    color: $color-principal;
+    text-decoration: none;
+    font-weight: 600;
+
+    &:hover { text-decoration: underline; }
+  }
+
+  h2 { color: $color-principal-oscuro; margin-bottom: $espaciado; }
+
+  .cargando { color: $color-neutro; }
+
+  .error {
+    padding: 0.6rem $espaciado;
+    border-radius: $radio;
+    background: #fbe9e7;
+    color: $color-peligro;
+  }
+
+  dl {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: 0.5rem $espaciado;
+    margin: 0 0 $espaciado;
+  }
+
+  dt { font-weight: 600; color: $color-neutro; }
+  dd { margin: 0; }
+
+  .estado {
+    @include etiqueta($color-aviso);
+
+    &[data-estado='CONFIRMADA'] { background: $color-exito; }
+    &[data-estado='COMPLETADA'] { background: $color-neutro; }
+    &[data-estado='CANCELADA'],
+    &[data-estado='RECHAZADA'] { background: $color-peligro; }
+  }
+
+  .aviso {
+    padding: 0.6rem $espaciado;
+    border-radius: $radio;
+    background: #e6f4ec;
+    color: $color-exito;
+  }
+
+  .gestion {
+    display: grid;
+    gap: 0.4rem;
+    margin-bottom: $espaciado;
+
+    label { font-weight: 600; }
+
+    textarea {
+      padding: 0.6rem;
+      border: 1px solid $color-borde;
+      border-radius: $radio;
+      font-family: inherit;
+      font-size: 1rem;
+
+      &.ng-touched.ng-invalid { border-color: $color-peligro; }
+    }
+
+    .error-campo { color: $color-peligro; }
+
+    .botones {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+  }
+
+  .btn-accion {
+    @include boton-base;
+    background: $color-exito;
+    color: #fff;
+
+    &[data-estado='RECHAZADA'] { background: $color-peligro; }
+    &[data-estado='COMPLETADA'] { background: $color-neutro; }
+  }
+
+  .btn-cancelar {
+    @include boton-base;
+    background: $color-peligro;
+    color: #fff;
+  }
+}

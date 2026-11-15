@@ -1,0 +1,82 @@
+@use '../../../styles/variables' as *;
+@use '../../../styles/mixins' as *;
+
+// Estilos LOCALES de este componente (anidados siguiendo la estructura del HTML)
+.card {
+  @include tarjeta($color-principal);
+
+  // El color del borde cambia segun el estado de la cita
+  &[data-estado='CONFIRMADA'] { border-left-color: $color-exito; }
+  &[data-estado='COMPLETADA'] { border-left-color: $color-neutro; }
+  &[data-estado='CANCELADA'],
+  &[data-estado='RECHAZADA'] { border-left-color: $color-peligro; }
+
+  .cabecera {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: $espaciado;
+  }
+
+  .estado {
+    @include etiqueta($color-aviso);
+
+    &[data-estado='CONFIRMADA'] { background: $color-exito; }
+    &[data-estado='COMPLETADA'] { background: $color-neutro; }
+    &[data-estado='CANCELADA'],
+    &[data-estado='RECHAZADA'] { background: $color-peligro; }
+  }
+
+  .especialidad {
+    margin: 0.25rem 0;
+    color: $color-principal-oscuro;
+    font-weight: 600;
+  }
+
+  .motivo {
+    margin: 0.25rem 0 $espaciado;
+  }
+
+  .detalle {
+    display: flex;
+    flex-wrap: wrap;
+    gap: $espaciado;
+    align-items: center;
+  }
+
+  .acciones {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: $espaciado;
+
+    small { color: $color-neutro; }
+  }
+
+  .botones {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .btn-detalle {
+    @include boton-base;
+    background: $color-principal;
+    color: #fff;
+  }
+
+  // Botones de accion del medico: cada estado tiene su color
+  .btn-accion {
+    @include boton-base;
+    background: $color-exito;
+    color: #fff;
+
+    &[data-estado='RECHAZADA'] { background: $color-peligro; }
+    &[data-estado='COMPLETADA'] { background: $color-neutro; }
+  }
+
+  .btn-cancelar {
+    @include boton-base;
+    background: $color-peligro;
+    color: #fff;
+  }
+}

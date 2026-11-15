@@ -1,0 +1,181 @@
+<section class="reserva">
+  <a routerLink="/citas" class="volver">&larr; Volver a mis citas</a>
+  <h2>Reservar cita</h2>
+
+  @if (cargando()) {
+    <p class="cargando">Cargando especialidades y doctores...</p>
+  }
+
+  @if (esMedico()) {
+    <p class="nota">Como medico, solo puede reservar citas en su propia agenda.</p>
+  }
+
+  <form [formGroup]="formulario" (ngSubmit)="reservar()" novalidate>
+    <div class="campo">
+      <label for="dniPaciente">DNI del paciente</label>
+      <input
+        id="dniPaciente"
+        formControlName="dniPaciente"
+        maxlength="8"
+        inputmode="numeric"
+        placeholder="Escriba los 8 digitos"
+      />
+      @if (formulario.controls.dniPaciente.touched) {
+        @if (formulario.controls.dniPaciente.hasError('required')) {
+          <small class="error">El DNI del paciente es obligatorio.</small>
+        } @else if (formulario.controls.dniPaciente.hasError('pattern')) {
+          <small class="error">El DNI debe tener 8 digitos.</small>
+        }
+      }
+      @if (buscandoDni()) {
+        <small class="buscando">Buscando datos del DNI...</small>
+      } @else if (avisoDni()) {
+        <small
+          class="aviso-dni"
+          [class.ficha]="origenDni() === 'FICHA'"
+          [class.reniec]="origenDni() === 'RENIEC'"
+          [class.manual]="origenDni() === null"
+        >{{ avisoDni() }}</small>
+      } @else {
+        <small class="ayuda-dni">Al escribir el DNI se completan los datos (ficha del paciente o RENIEC).</small>
+      }
+    </div>
+
+    <div class="fila">
+      <div class="campo">
+        <label for="nombres">Nombres</label>
+        <input id="nombres" formControlName="nombres" maxlength="60" />
+        @if (formulario.controls.nombres.touched && formulario.controls.nombres.invalid) {
+          <small class="error">Los nombres son obligatorios.</small>
+        }
+      </div>
+
+      <div class="campo">
+        <label for="apellidos">Apellidos</label>
+        <input id="apellidos" formControlName="apellidos" maxlength="60" />
+        @if (formulario.controls.apellidos.touched && formulario.controls.apellidos.invalid) {
+          <small class="error">Los apellidos son obligatorios.</small>
+        }
+      </div>
+    </div>
+
+    <div class="fila">
+      <div class="campo">
+        <label for="fechaNacimiento">Fecha de nacimiento</label>
+        <input id="fechaNacimiento" type="date" formControlName="fechaNacimiento" [max]="hoy" />
+        @if (formulario.controls.fechaNacimiento.touched) {
+          @if (formulario.controls.fechaNacimiento.hasError('required')) {
+            <small class="error">La fecha de nacimiento es obligatoria.</small>
+          } @else if (formulario.controls.fechaNacimiento.hasError('fechaFutura')) {
+            <small class="error">Debe ser anterior a hoy.</small>
+          } @else if (formulario.controls.fechaNacimiento.hasError('fechaMuyAntigua')) {
+            <small class="error">Revise la fecha (mas de 120 a&ntilde;os).</small>
+          }
+        }
+      </div>
+
+      <div class="campo">
+        <span class="etiqueta">Edad</span>
+        <div class="edad" [class.vacia]="edad() === null">
+          @if (edad() !== null) {
+            {{ edad() }} a&ntilde;os
+          } @else {
+            Se calcula sola
+          }
+        </div>
+      </div>
+    </div>
+
+    <div class="campo">
+      <label for="especialidad">Especialidad</label>
+      <select id="especialidad" formControlName="especialidad">
+        <option value="">Seleccione...</option>
+        @for (e of especialidades(); track e.idEspecialidad) {
+          <option [value]="e.idEspecialidad">{{ e.nombre }}</option>
+        }
+      </select>
+      @if (formulario.controls.especialidad.touched && formulario.controls.especialidad.invalid) {
+        <small class="error">Seleccione una especialidad.</small>
+      }
+      @if (precio() !== null) {
+        <small class="precio">Costo de la consulta: S/ {{ precio() }}</small>
+      }
+    </div>
+
+    <div class="campo">
+      <label for="doctor">Doctor</label>
+      <select id="doctor" formControlName="doctor">
+        <option value="">
+          {{ formulario.controls.especialidad.value ? 'Seleccione...' : 'Primero elija una especialidad' }}
+        </option>
+        @for (d of doctoresFiltrados(); track d.colegiatura) {
+          <option [value]="d.colegiatura">Dr. {{ d.nombres }} {{ d.apellidos }}</option>
+        }
+      </select>
+      @if (formulario.controls.doctor.touched && formulario.controls.doctor.invalid) {
+        <small class="error">Seleccione un doctor.</small>
+      }
+    </div>
+
+    <div class="campo">
+      <label for="fecha">Fecha</label>
+      <input id="fecha" type="date" formControlName="fecha" [min]="hoy" />
+      @if (formulario.controls.fecha.touched) {
+        @if (formulario.controls.fecha.hasError('required')) {
+          <small class="error">La fecha es obligatoria.</small>
+        } @else if (formulario.controls.fecha.hasError('fechaPasada')) {
+          <small class="error">No se puede reservar en una fecha pasada.</small>
+        }
+      }
+    </div>
+
+    <div class="campo">
+      <span class="etiqueta">Horario disponible</span>
+
+      @if (cargandoHorarios()) {
+        <p class="cargando">Consultando horarios...</p>
+      } @else if (horarios().length > 0) {
+        @if (!hayHorariosLibres()) {
+          <p class="vacio">El doctor no tiene espacios libres ese dia.</p>
+        }
+        <div class="horarios">
+          @for (h of horarios(); track h.hora) {
+            <button
+              type="button"
+              class="hora"
+              [class.elegida]="formulario.controls.hora.value === h.hora"
+              [disabled]="!h.disponible"
+              (click)="elegirHora(h)"
+            >
+              {{ corta(h.hora) }}
+            </button>
+          }
+        </div>
+      } @else if (formulario.controls.doctor.value && formulario.controls.fecha.valid) {
+        <p class="vacio">El doctor no atiende ese dia.</p>
+      } @else {
+        <p class="ayuda">Elija doctor y fecha para ver los horarios.</p>
+      }
+
+      @if (formulario.controls.hora.touched && formulario.controls.hora.invalid) {
+        <small class="error">Seleccione una hora.</small>
+      }
+    </div>
+
+    <div class="campo">
+      <label for="motivo">Motivo de la consulta</label>
+      <textarea id="motivo" rows="3" formControlName="motivo" maxlength="200"></textarea>
+      @if (formulario.controls.motivo.touched && formulario.controls.motivo.invalid) {
+        <small class="error">Indique el motivo (maximo 200 caracteres).</small>
+      }
+    </div>
+
+    @if (mensaje()) {
+      <p class="mensaje">{{ mensaje() }}</p>
+    }
+
+    <button type="submit" class="enviar" [disabled]="enviando()">
+      {{ enviando() ? 'Reservando...' : 'Reservar cita' }}
+    </button>
+  </form>
+</section>

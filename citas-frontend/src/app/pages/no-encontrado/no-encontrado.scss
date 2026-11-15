@@ -1,0 +1,10 @@
+@use '../../../styles/variables' as *;
+
+.no-encontrado {
+  text-align: center;
+  padding: calc($espaciado * 3) $espaciado;
+
+  h2 { color: $color-peligro; margin-bottom: 0.5rem; }
+
+  a { color: $color-principal; font-weight: 600; }
+}

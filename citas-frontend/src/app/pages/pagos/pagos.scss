@@ -1,0 +1,177 @@
+@use '../../../styles/variables' as *;
+@use '../../../styles/mixins' as *;
+
+.pagos {
+  display: grid;
+  gap: $espaciado;
+
+  h2 { color: $color-principal-oscuro; }
+  h3 { color: $color-principal-oscuro; font-size: 1.1rem; }
+  p { margin: 0; }
+
+  .subtitulo { margin-top: 0.4rem; }
+
+  // ---- Totales ----
+  .totales {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: $espaciado;
+  }
+
+  .total {
+    @include tarjeta($color-exito);
+    display: grid;
+    gap: 0.2rem;
+
+    span { color: $color-neutro; font-weight: 600; }
+    strong { font-size: 1.5rem; }
+
+    &.por-cobrar { border-left-color: $color-aviso; }
+  }
+
+  // ---- Avisos ----
+  .aviso {
+    padding: 0.6rem $espaciado;
+    border-radius: $radio;
+    background: #e6f4ec;
+    color: $color-exito;
+  }
+
+  .error {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: $espaciado;
+    padding: 0.6rem $espaciado;
+    border-radius: $radio;
+    background: #fbe9e7;
+    color: $color-peligro;
+  }
+
+  .reintentar {
+    @include boton-base;
+    background: $color-peligro;
+    color: #fff;
+  }
+
+  .cargando,
+  .vacio { color: $color-neutro; }
+
+  // ---- Citas completadas sin cobro: una tarjeta por cita ----
+  .sin-cobro {
+    display: grid;
+    gap: 0.6rem;
+  }
+
+  .cobros {
+    display: grid;
+    gap: 0.6rem;
+  }
+
+  .cobro {
+    @include tarjeta($color-aviso);
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    align-items: center;
+    gap: $espaciado;
+
+    .datos {
+      display: grid;
+      gap: 0.1rem;
+
+      small { color: $color-neutro; }
+    }
+
+    .monto {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: $color-exito;
+      white-space: nowrap;
+    }
+
+    .cobrar-acciones {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    select {
+      padding: 0.4rem 0.5rem;
+      border: 1px solid $color-borde;
+      border-radius: $radio;
+      font-size: 0.95rem;
+    }
+
+    // En pantallas medianas y pequenas todo pasa a una sola columna
+    @media (max-width: 820px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .confirmar-ahora {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.9rem;
+  }
+
+  .cobrar {
+    @include boton-base;
+    padding: 0.45rem 0.9rem;
+    background: $color-principal;
+    color: #fff;
+  }
+
+  // ---- Tabla de pagos: compacta, sin scroll en pantallas normales ----
+  .tabla-contenedor {
+    overflow-x: auto;
+    background: $color-superficie;
+    border: 1px solid $color-borde;
+    border-radius: $radio;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.88rem;
+  }
+
+  th,
+  td {
+    padding: 0.55rem 0.6rem;
+    text-align: left;
+    border-bottom: 1px solid $color-borde;
+    vertical-align: middle;
+  }
+
+  th { background: $color-fondo; color: $color-neutro; }
+
+  .num { white-space: nowrap; }
+  .operacion { font-size: 0.8rem; color: $color-neutro; word-break: break-all; }
+  .sin-accion { color: $color-neutro; }
+
+  .estado {
+    @include etiqueta($color-aviso);
+
+    &[data-estado='COMPLETADO'] { background: $color-exito; }
+    &[data-estado='RECHAZADO'] { background: $color-peligro; }
+  }
+
+  .acciones {
+    white-space: nowrap;
+
+    .confirmar,
+    .rechazar { margin-right: 0.3rem; }
+  }
+
+  .confirmar,
+  .rechazar {
+    @include boton-base;
+    padding: 0.3rem 0.7rem;
+    color: #fff;
+  }
+
+  .confirmar { background: $color-exito; }
+  .rechazar { background: $color-peligro; }
+}

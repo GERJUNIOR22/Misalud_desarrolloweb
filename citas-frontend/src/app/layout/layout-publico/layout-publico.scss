@@ -1,0 +1,54 @@
+@use '../../../styles/variables' as *;
+
+.barra {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: $espaciado;
+  padding: 0.7rem calc($espaciado * 1.5);
+  background: $color-superficie;
+  border-bottom: 1px solid $color-borde;
+}
+
+.marca {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  color: $color-texto;
+  text-decoration: none;
+
+  .logo {
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    border-radius: $radio;
+    background: $color-marino-claro;
+    color: #fff;
+  }
+
+  .nombre {
+    display: grid;
+    line-height: 1.15;
+
+    strong { font-size: 1.05rem; color: $color-marino; }
+    small { font-size: 0.72rem; color: $color-neutro; }
+  }
+}
+
+.acceso {
+  padding: 0.4rem 0.9rem;
+  border: 1px solid $color-borde;
+  border-radius: $radio;
+  color: $color-texto;
+  font-size: 0.9rem;
+  text-decoration: none;
+
+  &:hover { background: $color-fondo; }
+}
+
+.contenido {
+  max-width: $ancho-maximo;
+  margin: 0 auto;
+  padding: calc($espaciado * 1.5) $espaciado;
+}

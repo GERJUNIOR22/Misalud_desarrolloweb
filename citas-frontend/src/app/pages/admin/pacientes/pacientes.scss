@@ -1,0 +1,39 @@
+@use '../../../../styles/variables' as *;
+@use '../../../../styles/mixins' as *;
+
+.pacientes {
+  display: grid;
+  gap: $espaciado;
+
+  h2 { color: $color-principal-oscuro; }
+  p { margin: 0; }
+
+  @include tabla-datos;
+
+  .buscar {
+    padding: 0.6rem;
+    border: 1px solid $color-borde;
+    border-radius: $radio;
+    font-size: 1rem;
+  }
+
+  .error {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: $espaciado;
+    padding: 0.6rem $espaciado;
+    border-radius: $radio;
+    background: #fbe9e7;
+    color: $color-peligro;
+  }
+
+  .reintentar {
+    @include boton-base;
+    background: $color-peligro;
+    color: #fff;
+  }
+
+  .cargando,
+  .vacio { color: $color-neutro; }
+}

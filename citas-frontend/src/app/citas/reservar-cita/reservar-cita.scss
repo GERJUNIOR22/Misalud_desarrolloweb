@@ -1,0 +1,134 @@
+@use '../../../styles/variables' as *;
+@use '../../../styles/mixins' as *;
+
+.reserva {
+  @include tarjeta($color-principal);
+  max-width: 640px;
+  margin: 0 auto;
+
+  .volver {
+    display: inline-block;
+    margin-bottom: $espaciado;
+    color: $color-principal;
+    text-decoration: none;
+    font-weight: 600;
+
+    &:hover { text-decoration: underline; }
+  }
+
+  h2 {
+    color: $color-principal-oscuro;
+    margin-bottom: $espaciado;
+  }
+
+  form {
+    display: grid;
+    gap: 0.8rem;
+  }
+
+  .campo {
+    display: grid;
+    gap: 0.3rem;
+  }
+
+  // Dos campos lado a lado (nombres/apellidos, fecha/edad); en celular uno debajo del otro
+  .fila {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.8rem;
+
+    @media (max-width: 560px) { grid-template-columns: 1fr; }
+  }
+
+  input:disabled {
+    background: #f1f5f9;
+    color: $color-principal-oscuro;
+  }
+
+  .edad {
+    padding: 0.6rem;
+    border: 1px solid $color-borde;
+    border-radius: $radio;
+    background: #f1f5f9;
+    font-weight: 600;
+    color: $color-principal-oscuro;
+
+    &.vacia { font-weight: 400; color: $color-neutro; }
+  }
+
+  .buscando { color: $color-neutro; font-style: italic; }
+  .aviso-dni {
+    font-weight: 600;
+    &.ficha { color: $color-exito; }
+    &.reniec { color: $color-principal; }
+    &.manual { color: $color-peligro; }
+  }
+
+  label,
+  .etiqueta { font-weight: 600; }
+
+  select,
+  input,
+  textarea {
+    padding: 0.6rem;
+    border: 1px solid $color-borde;
+    border-radius: $radio;
+    font-size: 1rem;
+    font-family: inherit;
+
+    &.ng-touched.ng-invalid { border-color: $color-peligro; }
+  }
+
+  .nota {
+    margin: 0 0 $espaciado;
+    padding: 0.6rem;
+    border-radius: $radio;
+    background: #e8f1fa;
+    color: $color-principal-oscuro;
+  }
+
+  .error { color: $color-peligro; }
+  .precio { color: $color-exito; font-weight: 600; }
+  .cargando,
+  .ayuda,
+  .vacio { margin: 0; color: $color-neutro; }
+
+  .horarios {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .hora {
+    @include boton-base;
+    padding: 0.4rem 0.8rem;
+    background: #fff;
+    color: $color-principal;
+    border: 1px solid $color-principal;
+
+    &.elegida {
+      background: $color-principal;
+      color: #fff;
+    }
+
+    &:disabled {
+      border-color: $color-borde;
+      color: $color-neutro;
+      text-decoration: line-through;
+    }
+  }
+
+  .mensaje {
+    margin: 0;
+    padding: 0.6rem;
+    border-radius: $radio;
+    background: #fbe9e7;
+    color: $color-peligro;
+  }
+
+  .enviar {
+    @include boton-base;
+    background: $color-principal;
+    color: #fff;
+  }
+}

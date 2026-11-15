@@ -1,0 +1,35 @@
+<section class="lista">
+  <div class="titulo">
+    <h2>{{ titulo() }}</h2>
+    <a routerLink="/citas/nueva" class="nueva">Reservar nueva cita</a>
+  </div>
+
+  @if (mensaje()) {
+    <p class="aviso">{{ mensaje() }}</p>
+  }
+
+  @if (error()) {
+    <p class="error">
+      {{ error() }}
+      <button class="reintentar" (click)="cargar()">Reintentar</button>
+    </p>
+  }
+
+  @if (cargando()) {
+    <p class="cargando">Cargando citas...</p>
+  } @else {
+    @for (cita of citas(); track cita.codigo) {
+      <app-cita-card
+        [cita]="cita"
+        [mostrarPaciente]="auth.rol() === 'MEDICO'"
+        (seleccionada)="verDetalle($event)"
+        (cancelar)="cancelarCita($event)"
+        (cambiarEstado)="cambiarEstadoCita($event)"
+      />
+    } @empty {
+      @if (!error()) {
+        <p>No hay citas registradas.</p>
+      }
+    }
+  }
+</section>

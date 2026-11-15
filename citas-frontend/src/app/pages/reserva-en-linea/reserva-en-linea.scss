@@ -1,0 +1,153 @@
+@use '../../../styles/variables' as *;
+@use '../../../styles/mixins' as *;
+
+.reserva {
+  display: grid;
+  gap: $espaciado;
+
+  .volver {
+    justify-self: start;
+    color: $color-principal;
+    text-decoration: none;
+    font-weight: 600;
+
+    &:hover { text-decoration: underline; }
+  }
+
+  h1 { margin: 0; color: $color-marino; }
+  p { margin: 0; }
+  .cargando { color: $color-neutro; }
+
+  .columnas {
+    display: grid;
+    grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+    gap: calc($espaciado * 1.5);
+    align-items: start;
+
+    @media (max-width: 860px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .campos {
+    @include tarjeta($color-marino-claro);
+    display: grid;
+    gap: 0.8rem;
+
+    h2 {
+      margin: 0.4rem 0 0;
+      font-size: 1.05rem;
+      color: $color-marino;
+
+      &:first-child { margin-top: 0; }
+    }
+  }
+
+  .fila {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 0.8rem;
+  }
+
+  .campo {
+    display: grid;
+    gap: 0.3rem;
+    align-content: start;
+  }
+
+  label,
+  .etiqueta { font-weight: 600; font-size: 0.9rem; }
+
+  select,
+  input,
+  textarea {
+    padding: 0.6rem;
+    border: 1px solid $color-borde;
+    border-radius: $radio;
+    font-size: 1rem;
+    font-family: inherit;
+
+    &.ng-touched.ng-invalid { border-color: $color-peligro; }
+  }
+
+  .error { color: $color-peligro; font-size: 0.82rem; }
+  .ayuda { color: $color-neutro; font-size: 0.9rem; }
+
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .hora,
+  .metodo {
+    @include boton-base;
+    padding: 0.4rem 0.85rem;
+    background: $color-superficie;
+    color: $color-marino-claro;
+    border: 1px solid $color-marino-claro;
+
+    &.elegida {
+      background: $color-marino-claro;
+      color: #fff;
+    }
+  }
+
+  .hora:disabled {
+    border-color: $color-borde;
+    color: $color-neutro;
+    text-decoration: line-through;
+  }
+
+  .resumen {
+    @include tarjeta($color-exito);
+    display: grid;
+    gap: 0.7rem;
+    position: sticky;
+    top: 1rem;
+
+    h2 { margin: 0; font-size: 1.05rem; color: $color-marino; }
+
+    dl {
+      display: grid;
+      grid-template-columns: max-content 1fr;
+      gap: 0.3rem 0.8rem;
+      margin: 0;
+      font-size: 0.92rem;
+
+      dt { color: $color-neutro; }
+      dd { margin: 0; }
+    }
+
+    .total {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding-top: 0.7rem;
+      border-top: 1px solid $color-borde;
+
+      span { color: $color-neutro; }
+      strong { font-size: 1.5rem; color: $color-marino; }
+    }
+
+    .mensaje {
+      padding: 0.6rem;
+      border-radius: $radio;
+      background: #fbe9e7;
+      color: $color-peligro;
+      font-size: 0.9rem;
+    }
+
+    .pagar {
+      @include boton-base;
+      padding: 0.8rem;
+      background: $color-marino-claro;
+      color: #fff;
+      font-size: 1rem;
+
+      &:hover:not(:disabled) { background: $color-marino; }
+    }
+
+    .nota { color: $color-neutro; font-size: 0.78rem; line-height: 1.4; }
+  }
+}

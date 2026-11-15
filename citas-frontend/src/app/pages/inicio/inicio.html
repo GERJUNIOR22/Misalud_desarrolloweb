@@ -1,0 +1,13 @@
+<section class="inicio">
+  <h2>Bienvenido, {{ auth.sesion()?.correo }}</h2>
+  <p class="rol">Sesion iniciada como <strong>{{ auth.rol() }}</strong></p>
+
+  <div class="accesos">
+    @for (a of accesos(); track a.ruta + a.titulo) {
+      <a class="acceso" [routerLink]="a.ruta">
+        <strong>{{ a.titulo }}</strong>
+        <span>{{ a.descripcion }}</span>
+      </a>
+    }
+  </div>
+</section>

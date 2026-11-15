@@ -1,0 +1,52 @@
+@use '../../../styles/variables' as *;
+@use '../../../styles/mixins' as *;
+
+.lista {
+  display: grid;
+  gap: $espaciado;
+
+  .titulo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: $espaciado;
+  }
+
+  h2 { color: $color-principal-oscuro; }
+
+  .nueva {
+    @include boton-base;
+    background: $color-exito;
+    color: #fff;
+    text-decoration: none;
+  }
+
+  p { margin: 0; }
+
+  .aviso {
+    padding: 0.6rem $espaciado;
+    border-radius: $radio;
+    background: #e6f4ec;
+    color: $color-exito;
+  }
+
+  .error {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: $espaciado;
+    padding: 0.6rem $espaciado;
+    border-radius: $radio;
+    background: #fbe9e7;
+    color: $color-peligro;
+  }
+
+  .reintentar {
+    @include boton-base;
+    background: $color-peligro;
+    color: #fff;
+  }
+
+  .cargando { color: $color-neutro; }
+}

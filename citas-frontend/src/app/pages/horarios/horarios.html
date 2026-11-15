@@ -1,0 +1,116 @@
+<section class="horarios">
+  <h2>{{ titulo() }}</h2>
+
+  <form class="formulario" [formGroup]="formulario" (ngSubmit)="guardar()" novalidate>
+    <h3>Agregar horario de atencion</h3>
+
+    <div class="fila">
+      @if (esAdmin()) {
+        <div class="campo">
+          <label for="doctor">Doctor</label>
+          <select id="doctor" formControlName="doctor">
+            <option value="">Seleccione...</option>
+            @for (d of doctores(); track d.colegiatura) {
+              <option [value]="d.colegiatura">Dr. {{ d.nombres }} {{ d.apellidos }}</option>
+            }
+          </select>
+          @if (formulario.controls.doctor.touched && formulario.controls.doctor.invalid) {
+            <small class="error-campo">Seleccione un doctor.</small>
+          }
+        </div>
+      }
+
+      <div class="campo">
+        <label for="dia">Dia</label>
+        <select id="dia" formControlName="dia">
+          <option value="">Seleccione...</option>
+          @for (d of dias; track d) {
+            <option [value]="d">{{ d }}</option>
+          }
+        </select>
+        @if (formulario.controls.dia.touched && formulario.controls.dia.invalid) {
+          <small class="error-campo">Seleccione un dia.</small>
+        }
+      </div>
+
+      <div class="campo">
+        <label for="inicio">Hora de inicio</label>
+        <input id="inicio" type="time" formControlName="inicio" />
+        @if (formulario.controls.inicio.touched && formulario.controls.inicio.invalid) {
+          <small class="error-campo">La hora de inicio es obligatoria.</small>
+        }
+      </div>
+
+      <div class="campo">
+        <label for="fin">Hora de fin</label>
+        <input id="fin" type="time" formControlName="fin" />
+        @if (formulario.controls.fin.touched && formulario.controls.fin.invalid) {
+          <small class="error-campo">La hora de fin es obligatoria.</small>
+        }
+      </div>
+    </div>
+
+    @if (formulario.hasError('rangoInvalido')) {
+      <small class="error-campo">La hora de fin debe ser posterior a la de inicio.</small>
+    }
+
+    <div class="botones">
+      <button type="submit" class="guardar" [disabled]="enviando()">
+        {{ enviando() ? 'Guardando...' : 'Agregar horario' }}
+      </button>
+    </div>
+  </form>
+
+  @if (mensaje()) {
+    <p class="aviso">{{ mensaje() }}</p>
+  }
+
+  @if (error()) {
+    <p class="error">{{ error() }}</p>
+  }
+
+  @if (cargando()) {
+    <p class="cargando">Cargando horarios...</p>
+  } @else if (horarios().length === 0 && !error()) {
+    <p class="vacio">Aun no hay horarios registrados. Sin horarios no se pueden reservar citas.</p>
+  } @else if (horarios().length > 0) {
+    <div class="tabla-contenedor">
+      <table>
+        <thead>
+          <tr>
+            @if (esAdmin()) {
+              <th>Doctor</th>
+            }
+            <th>Dia</th>
+            <th>Inicio</th>
+            <th>Fin</th>
+            <th>Estado</th>
+            <th>Accion</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (h of horarios(); track h.idHorario) {
+            <tr>
+              @if (esAdmin()) {
+                <td>{{ h.nombreDoctor }}</td>
+              }
+              <td>{{ h.diaSemana }}</td>
+              <td>{{ hora(h.horaInicio) }}</td>
+              <td>{{ hora(h.horaFin) }}</td>
+              <td>
+                <span class="estado" [attr.data-activo]="h.activo">
+                  {{ h.activo ? 'Activo' : 'Desactivado' }}
+                </span>
+              </td>
+              <td>
+                <button class="toggle" [attr.data-activo]="h.activo" (click)="cambiarEstado(h)">
+                  {{ h.activo ? 'Desactivar' : 'Activar' }}
+                </button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</section>

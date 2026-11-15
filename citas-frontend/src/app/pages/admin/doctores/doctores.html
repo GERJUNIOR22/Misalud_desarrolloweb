@@ -1,0 +1,107 @@
+<section class="doctores">
+  <h2>Doctores</h2>
+
+  <form class="formulario" [formGroup]="formulario" (ngSubmit)="guardar()" novalidate>
+    <h3>
+      {{ editando() ? 'Editar: Dr. ' + editando()!.nombres + ' ' + editando()!.apellidos : 'Registrar doctor' }}
+    </h3>
+
+    <div class="fila">
+      <div class="campo">
+        <label for="colegiatura">Colegiatura (CMP)</label>
+        <input id="colegiatura" formControlName="colegiatura" maxlength="6" inputmode="numeric" />
+        <small class="error-campo">{{ error_('colegiatura') }}</small>
+      </div>
+      <div class="campo">
+        <label for="especialidad">Especialidad</label>
+        <select id="especialidad" formControlName="especialidad">
+          <option value="">Seleccione...</option>
+          @for (e of especialidades(); track e.idEspecialidad) {
+            <option [value]="e.idEspecialidad">{{ e.nombre }}</option>
+          }
+        </select>
+        <small class="error-campo">{{ error_('especialidad') }}</small>
+      </div>
+    </div>
+
+    <div class="fila">
+      <div class="campo">
+        <label for="nombres">Nombres</label>
+        <input id="nombres" formControlName="nombres" />
+        <small class="error-campo">{{ error_('nombres') }}</small>
+      </div>
+      <div class="campo">
+        <label for="apellidos">Apellidos</label>
+        <input id="apellidos" formControlName="apellidos" />
+        <small class="error-campo">{{ error_('apellidos') }}</small>
+      </div>
+    </div>
+
+    <div class="campo">
+      <label for="telefono">Telefono (opcional)</label>
+      <input id="telefono" formControlName="telefono" maxlength="9" inputmode="numeric" />
+      <small class="error-campo">{{ error_('telefono') }}</small>
+    </div>
+
+    <div class="fila">
+      <div class="campo">
+        <label for="correo">Correo (cuenta de acceso)</label>
+        <input id="correo" type="email" formControlName="correo" />
+        <small class="error-campo">{{ error_('correo') }}</small>
+      </div>
+      <div class="campo">
+        <label for="password">Contrasena inicial</label>
+        <input id="password" type="password" formControlName="password" />
+        <small class="error-campo">{{ error_('password') }}</small>
+      </div>
+    </div>
+
+    <div class="botones">
+      <button type="submit" class="guardar" [disabled]="enviando()">
+        {{ enviando() ? 'Guardando...' : editando() ? 'Guardar cambios' : 'Registrar doctor' }}
+      </button>
+      @if (editando()) {
+        <button type="button" class="secundario" (click)="cancelarEdicion()">Cancelar</button>
+      }
+    </div>
+  </form>
+
+  @if (mensaje()) {
+    <p class="aviso">{{ mensaje() }}</p>
+  }
+
+  @if (error()) {
+    <p class="error">{{ error() }}</p>
+  }
+
+  @if (cargando()) {
+    <p class="cargando">Cargando doctores...</p>
+  } @else if (doctores().length > 0) {
+    <div class="tabla-contenedor">
+      <table>
+        <thead>
+          <tr>
+            <th>CMP</th>
+            <th>Doctor</th>
+            <th>Especialidad</th>
+            <th>Telefono</th>
+            <th>Correo</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (d of doctores(); track d.colegiatura) {
+            <tr>
+              <td>{{ d.colegiatura }}</td>
+              <td>Dr. {{ d.nombres }} {{ d.apellidos }}</td>
+              <td>{{ d.especialidad?.nombre ?? '-' }}</td>
+              <td>{{ d.telefono ?? '-' }}</td>
+              <td>{{ d.correo ?? '-' }}</td>
+              <td><button class="editar" (click)="editar(d)">Editar</button></td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</section>
