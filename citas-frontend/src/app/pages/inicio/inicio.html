@@ -1,13 +1,279 @@
-<section class="inicio">
-  <h2>Bienvenido, {{ auth.sesion()?.correo }}</h2>
-  <p class="rol">Sesion iniciada como <strong>{{ auth.rol() }}</strong></p>
+<section class="dashboard">
+  <!-- Tarjeta de bienvenida -->
+  <div class="tarjeta-bienvenida">
+    <div class="bienvenida-contenido">
+      <h1>
+        ¡Hola, <span class="nombre-azul">{{ nombreSaludo() }}</span>! 👋
+      </h1>
+      <p class="subtitulo">
+        {{
+          auth.rol() === 'ADMIN'
+            ? 'Aquí está la información general de la clínica al día de hoy.'
+            : 'Aquí está el resumen de tu agenda al día de hoy.'
+        }}
+      </p>
+      <p class="resumen-agenda">
+        Tienes <strong>{{ proximasCitas().length }}</strong> citas próximas en la agenda.
+      </p>
+    </div>
 
-  <div class="accesos">
-    @for (a of accesos(); track a.ruta + a.titulo) {
-      <a class="acceso" [routerLink]="a.ruta">
-        <strong>{{ a.titulo }}</strong>
-        <span>{{ a.descripcion }}</span>
+    <div class="fecha-pill">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <rect x="3" y="4" width="18" height="18" rx="2" />
+        <path d="M16 2v4M8 2v4M3 10h18" />
+      </svg>
+      <span>{{ fechaFormateada }}</span>
+    </div>
+
+    <svg class="marca-agua-esteto" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+      <path
+        d="M18 10v14a12 12 0 0 0 24 0V10M30 36v8a10 10 0 0 0 20 0v-6"
+        stroke="currentColor"
+        stroke-width="4"
+        stroke-linecap="round"
+      />
+      <circle cx="50" cy="34" r="5" stroke="currentColor" stroke-width="4" />
+    </svg>
+  </div>
+
+  <!-- Tarjetas KPI -->
+  <div class="kpi-grid">
+    <a class="kpi-card kpi-morado" routerLink="/citas">
+      <div class="kpi-top">
+        <div class="kpi-icono">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="4" width="18" height="18" rx="2" />
+            <path d="M16 2v4M8 2v4M3 10h18" />
+          </svg>
+        </div>
+        <span class="kpi-pill">+{{ citasHoy() }} Hoy</span>
+      </div>
+      <div class="kpi-numero">{{ citas().length }}</div>
+      <div class="kpi-label">
+        {{ auth.rol() === 'ADMIN' ? 'CITAS REGISTRADAS' : 'MIS CITAS REGISTRADAS' }}
+      </div>
+      <svg class="kpi-watermark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+        <rect x="3" y="4" width="18" height="18" rx="2" />
+        <path d="M16 2v4M8 2v4M3 10h18" />
+      </svg>
+    </a>
+
+    @if (auth.rol() === 'ADMIN') {
+      <a class="kpi-card kpi-verde" routerLink="/admin/doctores">
+        <div class="kpi-top">
+          <div class="kpi-icono">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+              <circle cx="9" cy="7" r="4" />
+              <path d="M19 8v6M22 11h-6" />
+            </svg>
+          </div>
+        </div>
+        <div class="kpi-numero">{{ totalDoctores() }}</div>
+        <div class="kpi-label">MÉDICOS ACTIVOS</div>
+        <svg class="kpi-watermark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+          <path d="M6 3v7a6 6 0 0 0 12 0V3M12 16v3a4 4 0 0 0 8 0v-2" />
+          <circle cx="20" cy="15" r="2" />
+        </svg>
+      </a>
+
+      <a class="kpi-card kpi-azul" routerLink="/admin/pacientes">
+        <div class="kpi-top">
+          <div class="kpi-icono">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+              <circle cx="9" cy="7" r="4" />
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
+            </svg>
+          </div>
+          <span class="kpi-flecha" aria-hidden="true">→</span>
+        </div>
+        <div class="kpi-numero">{{ totalPacientes() }}</div>
+        <div class="kpi-label">PACIENTES</div>
+        <svg class="kpi-watermark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+          <rect x="2" y="5" width="20" height="14" rx="2" />
+          <circle cx="8" cy="11" r="2" />
+          <path d="M13 10h6M13 14h4" />
+        </svg>
+      </a>
+    } @else {
+      <a class="kpi-card kpi-verde" routerLink="/citas">
+        <div class="kpi-top">
+          <div class="kpi-icono">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="20 6 9 17 4 12" />
+            </svg>
+          </div>
+        </div>
+        <div class="kpi-numero">{{ citasConfirmadas() }}</div>
+        <div class="kpi-label">CITAS CONFIRMADAS</div>
+        <svg class="kpi-watermark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+          <path d="M6 3v7a6 6 0 0 0 12 0V3M12 16v3a4 4 0 0 0 8 0v-2" />
+        </svg>
+      </a>
+
+      <a class="kpi-card kpi-azul" routerLink="/citas">
+        <div class="kpi-top">
+          <div class="kpi-icono">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="9" />
+              <polyline points="9 12 11 14 15 10" />
+            </svg>
+          </div>
+          <span class="kpi-flecha" aria-hidden="true">→</span>
+        </div>
+        <div class="kpi-numero">{{ citasCompletadas() }}</div>
+        <div class="kpi-label">CITAS COMPLETADAS</div>
+        <svg class="kpi-watermark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+          <rect x="2" y="5" width="20" height="14" rx="2" />
+          <path d="M7 10h10M7 14h6" />
+        </svg>
       </a>
     }
+  </div>
+
+  <!-- Sección inferior: Próximas Citas + Resumen Estadístico -->
+  <div class="panel-inferior">
+    <div class="tarjeta-blanca tarjeta-citas">
+      <div class="tarjeta-header">
+        <div class="header-titulo">
+          <span class="icono-titulo">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="9" />
+              <path d="M12 7v5l3 2" />
+            </svg>
+          </span>
+          <h2>Próximas Citas</h2>
+        </div>
+        <a class="btn-agenda" routerLink="/citas">Ver Agenda Completa</a>
+      </div>
+
+      <div class="tabla-encabezado">
+        <span>HORARIO</span>
+        <span>DETALLES DEL PACIENTE</span>
+        <span>ASIGNACIÓN</span>
+        <span>ESTADO</span>
+      </div>
+
+      @if (cargando()) {
+        <div class="estado-vacio">
+          <p class="vacio-subtitulo">Cargando agenda...</p>
+        </div>
+      } @else if (proximasCitas().length === 0) {
+        <div class="estado-vacio">
+          <div class="vacio-icono" aria-hidden="true">
+            <svg viewBox="0 0 64 64" fill="none">
+              <path d="M16 10h22l10 10v34H16V10z" fill="#e2e8f0" />
+              <path d="M38 10v10h10" fill="#cbd5e1" />
+              <path d="M22 26h16M22 33h12M22 40h8" stroke="#94a3b8" stroke-width="3" stroke-linecap="round" />
+              <circle cx="44" cy="44" r="12" fill="#f8fafc" stroke="#93c5fd" stroke-width="3" />
+              <path d="M44 38v6l4 2" stroke="#3b82f6" stroke-width="3" stroke-linecap="round" />
+            </svg>
+          </div>
+          <h3>Todo listo por hoy</h3>
+          <p class="vacio-subtitulo">
+            No tienes nuevas citas programadas. Relájate o revisa las citas registradas.
+          </p>
+          <a class="btn-ir-citas" routerLink="/citas">Ir a Citas</a>
+        </div>
+      } @else {
+        <div class="lista-proximas">
+          @for (cita of proximasCitas(); track cita.codigo) {
+            <a class="fila-cita" [routerLink]="['/citas', cita.codigo]">
+              <div class="col-horario">
+                <strong>{{ cita.hora.slice(0, 5) }}</strong>
+                <small>{{ cita.fecha }}</small>
+              </div>
+              <div class="col-paciente">
+                <strong>{{ cita.paciente.nombres }} {{ cita.paciente.apellidos }}</strong>
+                <small>DNI: {{ cita.paciente.dni }}</small>
+              </div>
+              <div class="col-asignacion">
+                <strong>Dr. {{ cita.doctor.nombres }} {{ cita.doctor.apellidos }}</strong>
+                <small>{{ cita.doctor.especialidad.nombre }}</small>
+              </div>
+              <div class="col-estado">
+                <span class="badge-estado" [class]="claseEstado(cita.estado)">
+                  {{ etiquetaEstado(cita.estado) }}
+                </span>
+              </div>
+            </a>
+          }
+        </div>
+      }
+    </div>
+
+    <div class="tarjeta-blanca tarjeta-resumen">
+      <div class="tarjeta-header">
+        <h2>Resumen Estadístico</h2>
+        <button
+          type="button"
+          class="btn-refrescar"
+          (click)="cargarPanel()"
+          title="Actualizar datos"
+          aria-label="Actualizar resumen estadístico"
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="23 4 23 10 17 10" />
+            <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10" />
+          </svg>
+        </button>
+      </div>
+
+      <div class="resumen-subtitulo">DISTRIBUCIÓN DE ESTADOS</div>
+
+      <div class="dona-contenedor">
+        <svg class="dona-svg" viewBox="0 0 160 160">
+          @if (citas().length === 0) {
+            <circle
+              cx="80"
+              cy="80"
+              [attr.r]="radioDona"
+              fill="none"
+              stroke="#e2e8f0"
+              stroke-width="20"
+            />
+          } @else {
+            @for (seg of segmentosEstado(); track seg.estado) {
+              <circle
+                cx="80"
+                cy="80"
+                [attr.r]="radioDona"
+                fill="none"
+                [attr.stroke]="seg.color"
+                stroke-width="20"
+                [attr.stroke-dasharray]="seg.dasharray"
+                [attr.stroke-dashoffset]="seg.dashoffset"
+                transform="rotate(-90 80 80)"
+              />
+            }
+          }
+        </svg>
+
+        <div class="dona-centro">
+          <span class="dona-total-label">Total</span>
+          <strong class="dona-total-valor">{{ citas().length }}</strong>
+        </div>
+      </div>
+
+      <div class="leyenda-estados">
+        @if (segmentosEstado().length === 0) {
+          <p class="leyenda-vacia">Sin citas registradas aún.</p>
+        } @else {
+          @for (seg of segmentosEstado(); track seg.estado) {
+            <div class="leyenda-item">
+              <div class="leyenda-izq">
+                <span class="punto" [style.background]="seg.color"></span>
+                <span>{{ seg.etiqueta }}</span>
+              </div>
+              <div class="leyenda-der">
+                <strong>{{ seg.cantidad }}</strong>
+                <small>{{ seg.porcentaje }}%</small>
+              </div>
+            </div>
+          }
+        }
+      </div>
+    </div>
   </div>
 </section>
